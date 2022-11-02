@@ -1,7 +1,7 @@
 const express = require('express');
+const rotas = require('./routes');
 
 const app = express();
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
+rotas(app);
 
 module.exports = app;

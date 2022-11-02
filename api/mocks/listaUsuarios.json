@@ -1,0 +1,26 @@
+[
+  {
+    "nomeusuario": "joaquim_teste",
+    "email": "joaquim@teste.com.br",
+    "senha": "*******",
+    "nomecompleto": "Joaquim Teste Da silva",
+    "telefone": "61-987654321",
+    "datacadastro": "31/10/2022"
+  },
+  {
+    "nomeusuario": "maria_teste",
+    "email": "maria@teste.com.br",
+    "senha": "*******",
+    "nomecompleto": "Maria Teste De Olibveira",
+    "telefone": "61-987654321",
+    "datacadastro": "31/12/2022"
+  },
+  {
+    "nomeusuario": "jose_teste",
+    "email": "jose@teste.com.br",
+    "senha": "*******",
+    "nomecompleto": "Jose Teste",
+    "telefone": "61-987654321",
+    "datacadastro": "31/12/2022"
+  }
+]
