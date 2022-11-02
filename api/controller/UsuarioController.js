@@ -1,4 +1,3 @@
-const modelUsuario = require('../model');
 const conectarDatabase = require('../db');
 const ModelSchemaUsuario = require('../model/schemaUsuario');
 
@@ -6,12 +5,8 @@ class UsuarioController {
   
   static async consultarUsuarios(req, res) {
     console.log('Executando Controller -> consultarUsuarios');
-    // const { pesquisarTodosUsuarios } = modelUsuario();
     try {
-      // const listaUsuarios = await pesquisarTodosUsuarios();
-      // return res.status(200).json(listaUsuarios);
       conectarDatabase();
-      // const usuarios = new ModelSchemaUsuario();
       ModelSchemaUsuario.find({}, (err, docs) => {
         if (err) return res.status(500).json({
           status: 'error',
@@ -29,6 +24,7 @@ class UsuarioController {
   }
 
   static async cadastrarUsuario(req, res) {
+    console.log('Executando Controller -> cadastrarUsuario');
     try {
       conectarDatabase();
       const novoUsuario = new ModelSchemaUsuario(req.body);
