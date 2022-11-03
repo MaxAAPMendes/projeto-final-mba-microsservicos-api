@@ -40,6 +40,30 @@ class UsuarioController {
       })
     }
   }
+
+  static async alterarUsuario(req, res) {
+    const { nomeUsuario, _id } = req.body;
+    console.log(`Executando Controller -> alterarUsuario nomeUsuario: ${nomeUsuario}`);
+    if (!nomeUsuario && !_id) return res.status(400).json({
+      status: 'error',
+      mensagem: 'É necessário informar o campo nomeUsuario ou _id!'
+    });
+    const filtro = {};
+    _id ? filtro._id = _id : filtro.nomeUsuario = nomeUsuario;
+    try {
+      conectarDatabase();
+      const resultado = await ModelSchemaUsuario
+        .findOneAndUpdate(filtro, req.body, {
+        new: true,
+      })
+      return res.status(200).json(resultado);
+    } catch (error) {
+      return res.status(500).json({
+        status: 'error',
+        mensagem: `erro na alteração do usuário ${error.message}`
+      })
+    }
+  }
 };
 
 module.exports = UsuarioController;
