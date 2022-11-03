@@ -1,7 +1,13 @@
 const conectarDatabase = require('../db');
 const ModelSchemaUsuario = require('../model/schemaUsuario');
+const bcrypt = require('bcrypt');
 
 class UsuarioController {
+
+  static gerarSenhaComoHash(senha) {
+    const salt = 12;
+    return bcrypt.hashSync(senha, salt);
+  }
   
   static async consultarUsuarios(req, res) {
     console.log('Executando Controller -> consultarUsuarios');
@@ -25,9 +31,20 @@ class UsuarioController {
 
   static async cadastrarUsuario(req, res) {
     console.log('Executando Controller -> cadastrarUsuario');
+    const { body } = req;
+    if (!body.senha) return res.status(400).json({
+      status: 'erro',
+      mensagem: 'A senha é um requisito obrigatório! Informe a senha!'
+    });
+    const senhaHash = UsuarioController.gerarSenhaComoHash(body.senha);
+    if (!senhaHash) return res.status(500).json({
+      status: 'erro',
+      mensagem: 'Erro ao criptografar a senha!'
+    });
+    body.senha = senhaHash;
     try {
       conectarDatabase();
-      const novoUsuario = new ModelSchemaUsuario(req.body);
+      const novoUsuario = new ModelSchemaUsuario(body);
       await novoUsuario
         .save()
         .then((resultado) => {
