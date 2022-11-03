@@ -6,8 +6,8 @@ const router = Router();
 router
   .get('/usuarios', UsuarioController.consultarUsuarios)
   .post('/usuarios', UsuarioController.cadastrarUsuario)
-  .put('/usuarios', UsuarioController.alterarUsuario);
-  // .delete('/usuarios', UsuarioController.excluirUsuario);
+  .put('/usuarios', UsuarioController.alterarUsuario)
+  .delete('/usuarios', UsuarioController.excluirUsuario);
 
 module.exports = router;
 

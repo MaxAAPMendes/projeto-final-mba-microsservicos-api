@@ -43,7 +43,9 @@ class UsuarioController {
 
   static async alterarUsuario(req, res) {
     const { nomeUsuario, _id } = req.body;
-    console.log(`Executando Controller -> alterarUsuario nomeUsuario: ${nomeUsuario}`);
+    console.log(
+      `Executando Controller -> alterarUsuario nomeUsuario: ${nomeUsuario}, ${_id}`
+    );
     if (!nomeUsuario && !_id) return res.status(400).json({
       status: 'error',
       mensagem: 'É necessário informar o campo nomeUsuario ou _id!'
@@ -57,6 +59,36 @@ class UsuarioController {
         new: true,
       })
       return res.status(200).json(resultado);
+    } catch (error) {
+      return res.status(500).json({
+        status: 'error',
+        mensagem: `erro na alteração do usuário ${error.message}`
+      })
+    }
+  }
+
+  static async excluirUsuario(req, res) {
+    const { nomeUsuario, _id } = req.body;
+    console.log(`Executando Controller -> excluirUsuario: ${nomeUsuario}, ${_id}`);
+    if (!nomeUsuario && !_id) return res.status(400).json({
+      status: 'error',
+      mensagem: 'É necessário informar o campo nomeUsuario ou _id!'
+    });
+    const filtro = {};
+    _id ? filtro._id = _id : filtro.nomeUsuario = nomeUsuario;
+    try {
+      conectarDatabase();
+      const resultado = await ModelSchemaUsuario
+        .deleteOne(filtro);
+      console.log('deleção', resultado)
+      if (Object.keys(resultado)[0]) return res.status(200).json({
+        status: 'sucesso',
+        mensagem: 'Usuário excluído com sucesso!'
+      });
+      return res.status(500).json({
+        status: 'error',
+        mensagem: 'Houve um erro na exclusão do usuário!'
+      });
     } catch (error) {
       return res.status(500).json({
         status: 'error',
