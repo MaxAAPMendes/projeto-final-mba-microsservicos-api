@@ -2,6 +2,26 @@ const conectarDatabase = require('../db');
 const ModelSchemaFinancas = require('../model/schemaFinancas');
 
 class FinancasController {
+
+  static async consultarFinancas(req, res) {
+    console.log('Executando controller consultarFinancas...');
+    try {
+      conectarDatabase();
+      ModelSchemaFinancas.find({}, (err, docs) => {
+        if (err) return res.status(500).json({
+          status: 'error',
+          mensagem: `Erro ao consultar todos as finanças ${err.message}`
+        })
+        console.log('resultado da consulta todas finanças --->', docs);
+        return res.status(200).json(docs);
+      });
+    } catch (error) {
+      return res.status(500).json({
+        status: 'error',
+        mensagem: `Erro ao consultar finanças ${error.message}`,
+      });
+    }
+  }
   
   static async cadastrarFinancas(req, res) {
     const {
