@@ -4,6 +4,21 @@ const bcrypt = require('bcrypt');
 
 class UsuarioController {
 
+  static async compararSenhas(senhaPayLoad, senhaBanco) {
+    console.log('Executando a comparação de senhas...');
+    const resultadoComparacao = await bcrypt.compare(senhaPayLoad, senhaBanco);
+    // const resultadoComparacao = await bcrypt.compare(senhaPayLoad, senhaBanco, async (err, result) => {
+    //   if (err) return {
+    //     status: 'erro',
+    //     mensagem: 'Erro ao comparar as senhas'
+    //   }
+    //   console.log('Resultado da comparação de senhas', result);
+    //   return result;
+    // });
+    console.log("resultadoComparacao", resultadoComparacao);
+    return resultadoComparacao;
+  }
+
   static gerarSenhaComoHash(senha) {
     const salt = 12;
     return bcrypt.hashSync(senha, salt);
