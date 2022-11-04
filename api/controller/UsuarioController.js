@@ -75,6 +75,7 @@ class UsuarioController {
       await novoUsuario
         .save()
         .then((resultado) => {
+          resultado.senha = "********";
           res.status(201).json(resultado)
         });
     } catch (error) {
