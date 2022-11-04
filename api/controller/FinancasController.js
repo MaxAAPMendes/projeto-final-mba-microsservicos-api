@@ -3,6 +3,37 @@ const ModelSchemaFinancas = require('../model/schemaFinancas');
 
 class FinancasController {
 
+  static async alterarFinancas(req, res) {
+    const {
+      _id,
+      nome_banco,
+      tipo_conta,
+      nome_titular,
+    } = req.body;
+    if (!_id) return res.status(401).send({
+      status: 'atencao',
+      mensagem: 'Dados inválidos. Alteração deve ser feita via _id',
+    });
+    if (!nome_banco || !tipo_conta || !nome_titular) return res.status(401).send({
+      status: 'atenção',
+      mensagem: 'Os campos nome_banco, tipo_conta e nome_titular são obrigatórios.'
+    })
+    const filtro = { _id };
+    try {
+      conectarDatabase();
+      const resultado = await ModelSchemaFinancas
+        .findOneAndUpdate(filtro, req.body, {
+        new: true,
+      })
+      return res.status(200).json(resultado);
+    } catch (error) {
+      return res.status(500).json({
+        status: 'error',
+        mensagem: `erro na alteração da finança ${error.message}`
+      })
+    }    
+  }
+
   static async consultarFinancas(req, res) {
     console.log('Executando controller consultarFinancas...');
     try {

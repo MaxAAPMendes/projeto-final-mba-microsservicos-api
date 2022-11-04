@@ -6,6 +6,7 @@ const router = Router();
 
 router
   .post('/financas', usuarioLogado, FinancasController.cadastrarFinancas)
+  .put('/financas', usuarioLogado, FinancasController.alterarFinancas)
   .get('/financas', usuarioLogado, FinancasController.consultarFinancas);
 
 module.exports = router;
