@@ -3,7 +3,36 @@ const ModelSchemaFinancas = require('../model/schemaFinancas');
 
 class FinancasController {
 
-  static async alterarFinancas(req, res) {
+  static async excluirFinanca(req, res) {
+    const { _id } = req.body;
+    console.log(`Executando Controller -> excluirFinanca: ${_id}`);
+    if (!_id) return res.status(400).json({
+      status: 'error',
+      mensagem: 'É necessário informar o campo _id!'
+    });
+    const filtro = { _id };
+    try {
+      conectarDatabase();
+      const resultado = await ModelSchemaFinancas
+        .deleteOne(filtro);
+      console.log('deleção de finança', resultado)
+      if (Object.keys(resultado)[0]) return res.status(200).json({
+        status: 'sucesso',
+        mensagem: 'Finança excluída com sucesso!'
+      });
+      return res.status(500).json({
+        status: 'error',
+        mensagem: 'Houve um erro na exclusão da finança!'
+      });
+    } catch (error) {
+      return res.status(500).json({
+        status: 'error',
+        mensagem: `erro na alteração da finança ${error.message}`
+      })
+    }
+  }
+
+  static async alterarFinanca(req, res) {
     const {
       _id,
       nome_banco,
