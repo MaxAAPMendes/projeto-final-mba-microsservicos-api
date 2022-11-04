@@ -9,7 +9,7 @@ class UsuarioController {
     return bcrypt.hashSync(senha, salt);
   }
   
-  static async consultarUsuarios(req, res) {
+  static async consultarTodosUsuarios(req, res) {
     console.log('Executando Controller -> consultarUsuarios');
     try {
       conectarDatabase();
@@ -26,6 +26,26 @@ class UsuarioController {
         status: 'error',
         mensagem: `Erro ao consultar usuários ${error.message}`,
       });
+    }
+  }
+
+  static consultarUsuarioPorEmail(email) {
+    console.log('Executando Controller -> consultarUsuarioPorEmail...', email);
+    try {
+      conectarDatabase();
+      ModelSchemaUsuario.findOne({email}, (err, docs) => {
+        if (err) return {
+          status: 'error',
+          mensagem: `Erro ao consultar usuário por e-mail: ${err.message}`
+        };
+        console.log('resultado da consulta --->', docs)
+        return docs;
+      })
+    } catch (error) {
+      return {
+        status: 'error',
+        mensagem: `Erro ao consultar usuário por e-mail: ${error.message}`
+      };
     }
   }
 
