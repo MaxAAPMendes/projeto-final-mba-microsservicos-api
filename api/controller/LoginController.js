@@ -2,8 +2,18 @@ const UsuarioController = require('./UsuarioController');
 const conectarDatabase = require('../db');
 const ModelSchemaUsuario = require('../model/schemaUsuario');
 const jwt = require('jsonwebtoken');
+const usuarioLogado = require('../middleware/usuarioLogado');
 
 class LoginController {
+
+  static gerarTokenAcesso(nomeUsuario, email) {
+    return jwt.sign({
+      nomeUsuario,
+      email,
+    }, process.env.JWT_SECRET, {
+      expiresIn: '1h',
+    });
+  }
 
   static async logar(req, res) {
     const { email, senha } = req.body;
@@ -34,12 +44,7 @@ class LoginController {
           status: 'atencao',
           mensagem: 'Desculpe não foi possível fazer o login. Email ou senha inválidos!'
         })
-        const token = jwt.sign({
-          nomeUsuario,
-          email,
-        }, process.env.JWT_SECRET, {
-          expiresIn: '1h',
-        });
+        const token = LoginController.gerarTokenAcesso(nomeUsuario, email);
         return res
           .status(200)
           .send({
@@ -54,6 +59,15 @@ class LoginController {
         mensagem: `Erro ao consultar usuário por e-mail: ${error.message}`
       });
     }
+  }
+
+  static async alterarSenha(req, res, next) {
+    // const { authorization } = req.headers;
+    // if (!authorization) return res.status(401).send({
+    //   status: 'atenção',
+    //   mensagem: 'Você não tem autorização para alterar a senha!',
+    // });
+    return await usuarioLogado(req, res, next);
   }
 }
 
