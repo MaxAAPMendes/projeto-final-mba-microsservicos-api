@@ -36,16 +36,16 @@ class UsuarioController {
     }
   }
 
-  static consultarUsuarioPorEmail(email) {
+  static async consultarUsuarioPorEmail(email) {
     console.log('Executando Controller -> consultarUsuarioPorEmail...', email);
     try {
       conectarDatabase();
-      ModelSchemaUsuario.findOne({email}, (err, docs) => {
+      await ModelSchemaUsuario.findOne({email}, (err, docs) => {
         if (err) return {
           status: 'error',
           mensagem: `Erro ao consultar usuário por e-mail: ${err.message}`
         };
-        console.log('resultado da consulta --->', docs)
+        console.log('resultado da consulta por email --->', docs)
         return docs;
       })
     } catch (error) {
@@ -139,6 +139,42 @@ class UsuarioController {
         mensagem: `erro na alteração do usuário ${error.message}`
       })
     }
+  }
+
+  static async alterarSenha(req, res) {
+    console.log('Executando método alterarSenha...')
+    const { email, senha } = req.body;
+    const usuarioLocalidado = UsuarioController.consultarUsuarioPorEmail(email);
+    console.log('usuarioLocalidado no método alterarsenha', usuarioLocalidado);
+    if (!usuarioLocalidado || usuarioLocalidado?.status === 'error') return res.status(404).send({
+      status: 'erro',
+      mensagem: `Nenhum usuário localizado para o email: ${email}`
+    });
+    const filtro = { email };
+    try {
+      const resultado = await ModelSchemaUsuario.updateOne(filtro, {
+        senha,
+      });
+      const { modifiedCount, matchedCount } = resultado;
+      if (!modifiedCount && matchedCount) return res.status(200).send({
+        status: 'atenção',
+        mensagem: 'A Senha informada é a mesma cadastrada!'
+      });
+      if (!matchedCount) return res.status(500).send({
+        status: 'erro',
+        mensagem: 'Não foi possível alterar a senha'
+      });
+      return res.status(200).send({
+        status: 'sucesso',
+        mensagem: 'Senha alterada com sucesso'
+      });
+    } catch (error) {
+      return res.status(500).send({
+        status: 'erro',
+        mensagem: 'Erro ao tentar alterar a senha do usuário'
+      })
+    }
+
   }
 };
 

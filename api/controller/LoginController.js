@@ -2,7 +2,6 @@ const UsuarioController = require('./UsuarioController');
 const conectarDatabase = require('../db');
 const ModelSchemaUsuario = require('../model/schemaUsuario');
 const jwt = require('jsonwebtoken');
-const usuarioLogado = require('../middleware/usuarioLogado');
 
 class LoginController {
 
@@ -59,15 +58,6 @@ class LoginController {
         mensagem: `Erro ao consultar usuário por e-mail: ${error.message}`
       });
     }
-  }
-
-  static async alterarSenha(req, res, next) {
-    // const { authorization } = req.headers;
-    // if (!authorization) return res.status(401).send({
-    //   status: 'atenção',
-    //   mensagem: 'Você não tem autorização para alterar a senha!',
-    // });
-    return await usuarioLogado(req, res, next);
   }
 }
 
