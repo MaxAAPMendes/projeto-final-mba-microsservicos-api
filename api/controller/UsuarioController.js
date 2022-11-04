@@ -1,21 +1,13 @@
 const conectarDatabase = require('../db');
 const ModelSchemaUsuario = require('../model/schemaUsuario');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 class UsuarioController {
 
   static async compararSenhas(senhaPayLoad, senhaBanco) {
     console.log('Executando a comparação de senhas...');
     const resultadoComparacao = await bcrypt.compare(senhaPayLoad, senhaBanco);
-    // const resultadoComparacao = await bcrypt.compare(senhaPayLoad, senhaBanco, async (err, result) => {
-    //   if (err) return {
-    //     status: 'erro',
-    //     mensagem: 'Erro ao comparar as senhas'
-    //   }
-    //   console.log('Resultado da comparação de senhas', result);
-    //   return result;
-    // });
-    console.log("resultadoComparacao", resultadoComparacao);
     return resultadoComparacao;
   }
 
