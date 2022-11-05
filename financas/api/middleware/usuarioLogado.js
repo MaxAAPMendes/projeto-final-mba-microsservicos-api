@@ -1,0 +1,24 @@
+const jwt = require('jsonwebtoken');
+
+module.exports = (req, res, next) => {
+  console.log('Finanças - Validando o token...')
+  const { authorization } = req.headers;
+  if (!authorization) {
+    return res.status(401).send({
+      status: 'erro',
+      mensagem: 'Falha na autenticação'
+    })
+  }
+  const token = authorization.split(' ')[1];
+  try {
+    const decode = jwt.verify(token, process.env.JWT_SECRET);
+    console.log('decode......', decode);
+    req.usuario = decode;
+    next();
+  } catch (error) {
+    return res.status(401).send({
+      status: 'erro',
+      mensagem: 'Falha na autenticação'
+    })
+  }
+}
