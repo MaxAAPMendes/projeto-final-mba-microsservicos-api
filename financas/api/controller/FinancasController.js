@@ -1,7 +1,28 @@
 const conectarDatabase = require('../db');
 const ModelSchemaFinancas = require('../model/schemaFinancas');
+const axios = require('../config/axios');
 
 class FinancasController {
+
+  static async logar(req, res) {
+    const { email, senha } = req.body;
+    console.log(`Executando controller logar de financas - email: ${email}`);
+    axios
+      .get('/')
+      .then((response) => {
+        console.log('REsposta da comunicação:', response);
+        const { status } = response || 500;
+        const resultado = response?.data || { mensagem: 'Sem dados' };
+        return res.status(status).send(resultado);
+      })
+      .catch((error) => {
+        console.log('Erro na comunicação', error?.message);
+        return res.status(500).send({
+          status: 'erro',
+          mensagem: `Ocorreu um erro de comunicação entre os servicos ${error.message}`
+        });
+      })
+  }
 
   static async excluirFinanca(req, res) {
     const { _id } = req.body;
