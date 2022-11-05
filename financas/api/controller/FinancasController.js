@@ -8,9 +8,14 @@ class FinancasController {
     const { email, senha } = req.body;
     console.log(`Executando controller logar de financas - email: ${email}`);
     axios
-      .get('/')
+      .get('/login', {
+        data: {
+          email,
+          senha
+        }
+      })
       .then((response) => {
-        console.log('REsposta da comunicação:', response);
+        console.log('Resposta da comunicação:', response);
         const { status } = response || 500;
         const resultado = response?.data || { mensagem: 'Sem dados' };
         return res.status(status).send(resultado);
